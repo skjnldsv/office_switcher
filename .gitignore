@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: none
+# SPDX-License-Identifier: CC0-1.0
+
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+/js
+/css
+/.php-cs-fixer.cache
+/vendor
+/vendor-bin/*/vendor
+!/action/dist/index.js

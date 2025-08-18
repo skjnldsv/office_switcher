@@ -1,0 +1,69 @@
+{
+	"name": "office_switcher",
+	"description": "Built-in office_switcher for Nextcloud",
+	"version": "3.0.0-dev.0",
+	"author": "<skjnldsv@protonmail.com>",
+	"contributors": [
+		"<skjnldsv@protonmail.com>"
+	],
+	"keywords": [
+		"nextcloud",
+		"files",
+		"performace"
+	],
+	"bugs": {
+		"url": "https://github.com/skjnldsv/office_switcher/issues"
+	},
+	"repository": {
+		"url": "git+https://github.com/skjnldsv/office_switcher.git",
+		"type": "git"
+	},
+	"homepage": "https://github.com/skjnldsv/office_switcher",
+	"license": "AGPL-3.0-or-later",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"build": "vite --mode production build",
+		"dev": "export NODE_ENV=development; vite --mode development build",
+		"watch": "export NODE_ENV=development; vite --mode development build --watch",
+		"lint": "eslint src",
+		"lint:fix": "eslint src --fix",
+		"stylelint": "stylelint src",
+		"stylelint:fix": "stylelint src --fix"
+	},
+	"dependencies": {
+		"@mdi/svg": "^7.4.47",
+		"@nextcloud/axios": "^2.5.1",
+		"@nextcloud/dialogs": "^7.0.0-rc.1",
+		"@nextcloud/event-bus": "^3.3.2",
+		"@nextcloud/files": "^3.12.0",
+		"@nextcloud/initial-state": "^3.0.0",
+		"@nextcloud/l10n": "^3.4.0",
+		"@nextcloud/logger": "^3.0.2",
+		"@nextcloud/router": "^3.0.1",
+		"@nextcloud/vue": "^9.0.0-rc.5",
+		"vue": "^3.5.18",
+		"vue-material-design-icons": "^5.3.1"
+	},
+	"browserslist": [
+		"extends @nextcloud/browserslist-config"
+	],
+	"engines": {
+		"node": "^20.0.0",
+		"npm": "^10.0.0"
+	},
+	"devDependencies": {
+		"@nextcloud/browserslist-config": "^3.0.1",
+		"@nextcloud/capabilities": "^1.2.0",
+		"@nextcloud/eslint-config": "^8.4.2",
+		"@nextcloud/typings": "^1.9.1",
+		"@nextcloud/vite-config": "^2.4.0",
+		"@vue/compiler-sfc": "^3.5.18",
+		"@vue/tsconfig": "^0.8.1",
+		"ts-node": "^10.9.2",
+		"tslib": "^2.8.1",
+		"typescript": "^5.9.2",
+		"vite": "^7.1.2",
+		"vite-plugin-node-polyfills": "^0.24.0"
+	}
+}
