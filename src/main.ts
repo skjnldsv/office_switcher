@@ -10,41 +10,26 @@ import mdiFileDocumentOutline from '@mdi/svg/svg/file-document-outline.svg?raw'
 import { logger } from './logger'
 import { execViewerAction, getActionForApp, getAppIconSvgString, getMimesForApp } from './actionUtils'
 
-const apps = ['richdocuments', 'onlyoffice', 'officeonline', 'thinkfree']
+// The new actions
 const actions = [] as FileAction[]
-apps.forEach(async (appName) => {
-	const action = getActionForApp(appName)
-	const appSvg = await getAppIconSvgString(appName)
 
-	if (action) {
-		// Register the action with the office switcher
-		const newAction = new FileAction({
-			id: `office-switcher-${appName}`,
-			displayName: () => t('office_switcher', `Open with ${appName}`),
-			enabled: action.enabled,
-			iconSvgInline: () => appSvg,
-			exec: action.exec,
-			parent: 'office-switcher',
-		})
-		registerFileAction(newAction)
-		actions.push(newAction)
+// Office apps to process
+const apps = ['richdocuments', 'onlyoffice', 'officeonline', 'thinkfree']
 
-		// Disable the original action to prevent conflicts
-		// @ts-expect-error readonly property
-		action.enabled = () => false // Disable the ThinkFree action
+// Existing actions to disable
+const disabledActions = ['onlyoffice-open', 'onlyoffice-open-def', 'thinkfreeEditorAction']
 
-		logger.debug(`Action for app ${appName} registered successfully`)
-		return
-	}
-	logger.debug(`No action found for app ${appName}, falling back to viewer handlers`)
-
+// Register the actions for each app
+apps.forEach((appName) => {
+	const appSvg = getAppIconSvgString(appName)
 	const mimes = getMimesForApp(appName)
 	if (mimes.length === 0) {
-		logger.debug(`No mimes found for app ${appName}, skipping registration`)
+		logger.debug(`No mimes nor registered action found for app ${appName}, skipping registration`)
 		return
 	}
 
-	// Register the viewer action for the app
+	// Register the new action for the app
+	const execViewer =  (file: Node, view: View, dir: string) => execViewerAction(file, view, dir, appName)
 	const newAction = new FileAction({
 		id: `office-switcher-viewer-${appName}`,
 		displayName: () => t('office_switcher', `Open with ${appName}`),
@@ -57,14 +42,15 @@ apps.forEach(async (appName) => {
 			return mimes.includes(node.mime)
 		},
 		parent: 'office-switcher',
-		exec: execViewerAction,
+		exec: getActionForApp(appName)?.exec || execViewer,
 	})
 	registerFileAction(newAction)
 	actions.push(newAction)
 
-	logger.debug(`Viewer action for app ${appName} registered successfully`)
+	logger.debug(`Action for app ${appName} registered successfully`, { action: newAction, mimes })
 })
 
+// Register the main action that will show the options
 if (actions.length !== 0) {
 	registerFileAction(new FileAction({
 		id: 'office-switcher',
@@ -80,4 +66,20 @@ if (actions.length !== 0) {
 			return null
 		}
 	}))
+} else {
+	logger.debug('No actions registered, skipping main office-switcher action registration')
 }
+
+// Disable existing actions that conflict with the new ones
+disabledActions.forEach((actionId) => {
+	const action = getFileActions().find(action => action.id === actionId)
+	if (action) {
+		Object.defineProperty(action, 'enabled', {
+			get: () => () => false,
+		})
+		logger.debug(`Disabled action ${actionId} to avoid conflicts with office switcher`)
+		return
+	}
+
+	logger.debug(`Action ${actionId} not found, cannot disable it`)
+})
