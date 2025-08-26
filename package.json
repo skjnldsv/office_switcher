@@ -1,7 +1,7 @@
 {
 	"name": "office_switcher",
 	"description": "Built-in office_switcher for Nextcloud",
-	"version": "3.0.0-dev.0",
+	"version": "0.1.0",
 	"author": "<skjnldsv@protonmail.com>",
 	"contributors": [
 		"<skjnldsv@protonmail.com>"
