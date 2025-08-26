@@ -3,4 +3,5 @@
 .gitignore
 .nextcloudignore
 krankerl.toml
+node_modules
 README.md
