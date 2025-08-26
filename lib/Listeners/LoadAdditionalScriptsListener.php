@@ -43,7 +43,9 @@ class LoadAdditionalScriptsListener implements IEventListener {
 		}
 	
 		// Provide the initial state with the supported formats JSON
-		$this->initialState->provideInitialState('thinkfree_supported_formats', $this->thinkfreeSupportedFormatsJSON ?? []);
+		if ($this->thinkfreeSupportedFormatsJSON !== null) {
+			$this->initialState->provideInitialState('thinkfree_supported_formats', $this->thinkfreeSupportedFormatsJSON);
+		}
 
 		// Add scripts to the page
 		Util::addScript(Application::APP_ID, Application::APP_ID . '-main', 'core', true);
