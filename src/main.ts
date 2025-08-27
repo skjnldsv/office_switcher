@@ -2,25 +2,29 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { Node, View } from '@nextcloud/files'
-import { DefaultType, FileAction, getFileActions, registerFileAction } from '@nextcloud/files'
+import {  FileAction, getFileActions, registerFileAction } from '@nextcloud/files'
 import { t } from '@nextcloud/l10n'
+import { loadState } from '@nextcloud/initial-state'
 
 import mdiFileDocumentOutline from '@mdi/svg/svg/file-document-outline.svg?raw'
 
 import { logger } from './logger'
 import { execViewerAction, getActionForApp, getAppIconSvgString, getMimesForApp } from './actionUtils'
 
+type AppEntry = {
+	[key: string]: string
+}
+
 // The new actions
 const actions = [] as FileAction[]
-
-// Office apps to process
-const apps = ['richdocuments', 'onlyoffice', 'officeonline', 'thinkfree']
 
 // Existing actions to disable
 const disabledActions = ['onlyoffice-open', 'onlyoffice-open-def', 'thinkfreeEditorAction']
 
 // Register the actions for each app
-apps.forEach((appName) => {
+const apps = loadState<AppEntry>('office_switcher', 'office_apps', {})
+Object.keys(apps).forEach((appName) => {
+	const appNameTranslated = apps[appName] || appName
 	const appSvg = getAppIconSvgString(appName)
 	const mimes = getMimesForApp(appName)
 	if (mimes.length === 0) {
@@ -32,7 +36,8 @@ apps.forEach((appName) => {
 	const execViewer =  (file: Node, view: View, dir: string) => execViewerAction(file, view, dir, appName)
 	const newAction = new FileAction({
 		id: `office-switcher-viewer-${appName}`,
-		displayName: () => t('office_switcher', `Open with ${appName}`),
+		displayName: () => t('office_switcher', 'Open with {appNameTranslated}', { appNameTranslated }),
+		order: 1,
 		iconSvgInline: () => appSvg,
 		enabled: (nodes: Node[]) => {
 			if (!nodes[0] || nodes.length !== 1) {

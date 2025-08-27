@@ -19,3 +19,4 @@ yarn-error.log
 /vendor
 /vendor-bin/*/vendor
 !/action/dist/index.js
+build
