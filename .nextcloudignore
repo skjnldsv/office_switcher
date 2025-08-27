@@ -1,9 +1,13 @@
-.git
-.github
+.git/
+.github/
+node_modules/
+src/
+
+.editorconfig
 .gitignore
+.l10nignore
 .nextcloudignore
 krankerl.toml
-node_modules
 package.json
 psalm.xml
 README.md
