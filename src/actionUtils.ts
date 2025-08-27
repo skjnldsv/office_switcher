@@ -1,12 +1,13 @@
 // SPDX-FileCopyrightText: 2025 John Molakvoæ <skjnldsv@protonmail.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import type { Node, View } from '@nextcloud/files'
 
-import { emit } from '@nextcloud/event-bus'
-import { FileAction, getFileActions } from '@nextcloud/files'
-import { generateFilePath } from '@nextcloud/router'
+import type { FileAction, Node, View } from '@nextcloud/files'
+
 import { getCapabilities } from '@nextcloud/capabilities'
+import { emit } from '@nextcloud/event-bus'
+import { getFileActions } from '@nextcloud/files'
 import { loadState } from '@nextcloud/initial-state'
+import { generateFilePath } from '@nextcloud/router'
 
 export function getAppIconSvgString(appName: string): string {
 	const appIconUrl = generateFilePath(appName, '', 'img/app.svg')
@@ -26,6 +27,9 @@ function pushToHistory(node: Node, view: View, dir: string) {
 	)
 }
 
+/**
+ * From https://github.com/nextcloud/viewer/blob/d531abe602996292c8c0c45d0c525afcdc58bea6/src/files_actions/viewerAction.ts#L34
+ */
 function onPopState() {
 	emit('editor:toggle', window.OCP.Files.Router.query?.editing === 'true')
 	if (window.OCP.Files.Router.query.openfile !== 'true') {
@@ -37,7 +41,7 @@ function onPopState() {
 /**
  * From https://github.com/nextcloud/viewer/blob/d531abe602996292c8c0c45d0c525afcdc58bea6/src/files_actions/viewerAction.ts#L48
  */
-export async function execViewerAction(node: Node, view: View, dir: string, handler: string): Promise<boolean|null> {
+export async function execViewerAction(node: Node, view: View, dir: string, handler: string): Promise<boolean | null> {
 	const onClose = () => {
 		// This can sometime be called with the openfile set to true already. But we don't want to keep openfile when closing the viewer.
 		const newQuery = { ...window.OCP.Files.Router.query }
@@ -69,7 +73,7 @@ export async function execViewerAction(node: Node, view: View, dir: string, hand
 function getRichDocumentMimes(): string[] {
 	const mimetypes = (getCapabilities()?.richdocuments?.mimetypes || []) as string[]
 	const mimetypesNoDefaultOpen = (getCapabilities()?.richdocuments?.mimetypesNoDefaultOpen || []) as string[]
-	return [... new Set([...mimetypes, ...mimetypesNoDefaultOpen])]
+	return [...new Set([...mimetypes, ...mimetypesNoDefaultOpen])]
 }
 
 /**
@@ -97,7 +101,7 @@ export function getMimesForApp(appName: string): string[] {
 			return getOfficeOnlineMimes()
 		case 'thinkfree':
 			const formats = JSON.parse(loadState('office_switcher', 'thinkfree_supported_formats', '{}'))
-			return Object.values(formats).map(type => Object.values(type.mime)).flat() as string[] || []
+			return Object.values(formats).map((type) => Object.values(type.mime)).flat() as string[] || []
 		default:
 			return []
 	}
@@ -106,10 +110,10 @@ export function getMimesForApp(appName: string): string[] {
 export function getActionForApp(appName: string): FileAction | null {
 	switch (appName) {
 		case 'onlyoffice':
-			return getFileActions().find(action => action.id === 'onlyoffice-open') || null
+			return getFileActions().find((action) => action.id === 'onlyoffice-open') || null
 		case 'thinkfree':
-			return getFileActions().find(action => action.id === 'thinkfreeEditorAction') || null
+			return getFileActions().find((action) => action.id === 'thinkfreeEditorAction') || null
 		default:
-			return null;
+			return null
 	}
 }

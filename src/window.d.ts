@@ -5,22 +5,22 @@
 /// <reference types="@nextcloud/typings" />
 
 type SettingOptions = {
-	el: () => HTMLElement;
-	open?: () => void;
-	close?: () => void;
-	order?: number;
+	el: () => HTMLElement
+	open?: () => void
+	close?: () => void
+	order?: number
 }
 
 type ViewerOptions = {
-	path: string;
-	fileInfo: any,
-	list?: any[];
-	enableSidebar?: boolean;
-	loadMore?: () => any[];
-	canLoop?: boolean;
-	onPrev?: () => void;
-	onNext?: () => void;
-	onClose?: () => void;
+	path: string
+	fileInfo: any
+	list?: any[]
+	enableSidebar?: boolean
+	loadMore?: () => any[]
+	canLoop?: boolean
+	onPrev?: () => void
+	onNext?: () => void
+	onClose?: () => void
 }
 
 declare global {

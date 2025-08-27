@@ -2,14 +2,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type { Node, View } from '@nextcloud/files'
-import {  FileAction, getFileActions, registerFileAction } from '@nextcloud/files'
-import { t } from '@nextcloud/l10n'
-import { loadState } from '@nextcloud/initial-state'
 
 import mdiFileDocumentOutline from '@mdi/svg/svg/file-document-outline.svg?raw'
-
-import { logger } from './logger'
-import { execViewerAction, getActionForApp, getAppIconSvgString, getMimesForApp } from './actionUtils'
+import { FileAction, getFileActions, registerFileAction } from '@nextcloud/files'
+import { loadState } from '@nextcloud/initial-state'
+import { t } from '@nextcloud/l10n'
+import { execViewerAction, getActionForApp, getAppIconSvgString, getMimesForApp } from './actionUtils.ts'
+import { logger } from './logger.ts'
 
 type AppEntry = {
 	[key: string]: string
@@ -33,7 +32,7 @@ Object.keys(apps).forEach((appName) => {
 	}
 
 	// Register the new action for the app
-	const execViewer =  (file: Node, view: View, dir: string) => execViewerAction(file, view, dir, appName)
+	const execViewer = (file: Node, view: View, dir: string) => execViewerAction(file, view, dir, appName)
 	const newAction = new FileAction({
 		id: `office-switcher-viewer-${appName}`,
 		displayName: () => t('office_switcher', 'Open with {appNameTranslated}', { appNameTranslated }),
@@ -64,12 +63,12 @@ if (actions.length !== 0) {
 		order: -99999,
 
 		enabled: (nodes: Node[], view: View) => {
-			return actions.some(action => action.enabled!(nodes, view))
+			return actions.some((action) => action.enabled!(nodes, view))
 		},
 
 		async exec() {
 			return null
-		}
+		},
 	}))
 } else {
 	logger.debug('No actions registered, skipping main office-switcher action registration')
@@ -77,7 +76,7 @@ if (actions.length !== 0) {
 
 // Disable existing actions that conflict with the new ones
 disabledActions.forEach((actionId) => {
-	const action = getFileActions().find(action => action.id === actionId)
+	const action = getFileActions().find((action) => action.id === actionId)
 	if (action) {
 		Object.defineProperty(action, 'enabled', {
 			get: () => () => false,
