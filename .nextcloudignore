@@ -4,4 +4,8 @@
 .nextcloudignore
 krankerl.toml
 node_modules
+package.json
+psalm.xml
 README.md
+tsconfig.json
+vite.config.ts
