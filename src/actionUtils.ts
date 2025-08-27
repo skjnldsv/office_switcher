@@ -48,14 +48,14 @@ export async function execViewerAction(node: Node, view: View, dir: string, hand
 
 	window.addEventListener('popstate', onPopState)
 
-	pushToHistory(node, view, dir)
+	// pushToHistory(node, view, dir)
 	window.OCA.Viewer.openWith(handler, {
 		path: node.path,
 		onPrev(fileInfo) {
-			pushToHistory(fileInfo, view, dir)
+			// pushToHistory(fileInfo, view, dir)
 		},
 		onNext(fileInfo) {
-			pushToHistory(fileInfo, view, dir)
+			// pushToHistory(fileInfo, view, dir)
 		},
 		onClose,
 	})
